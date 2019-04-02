@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freshit_flutter/AppTheme.dart';
 
 class AddItem extends StatefulWidget {
   @override
@@ -32,13 +33,13 @@ class AddItemScreen extends State<AddItem> {
         title: new Text(
           "FreshIt",
           style: new TextStyle(
-              fontFamily: 'Flama',
+              fontFamily: AppTheme.primaryFont,
               fontSize: 24,
               fontWeight: FontWeight.w700,
               fontStyle: FontStyle.normal
           ),
         ),
-        backgroundColor: Color.fromRGBO(23, 69, 145, 1.0),
+        backgroundColor: AppTheme.primaryColor,
       ),
       body:Column(
         mainAxisSize: MainAxisSize.min,

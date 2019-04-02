@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freshit_flutter/AppTheme.dart';
 import 'title.dart';
 import '_SignInFooter.dart';
 class LoginPage extends StatefulWidget {
@@ -63,11 +64,11 @@ class _LoginPageState extends State<LoginPage> {
                       "SignIn",
                       style: new TextStyle(
                         fontSize: 27,
-                        fontFamily: 'flama',
+                        fontFamily: AppTheme.primaryFont,
                         color: Colors.white,
                       ),
                     ),
-                    color: Color.fromRGBO(23, 69, 145, 1.0),
+                    color: AppTheme.primaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(30)),
                       side: BorderSide(
