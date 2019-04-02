@@ -33,7 +33,7 @@ class AddItemScreen extends State<AddItem> {
         title: new Text(
           "FreshIt",
           style: new TextStyle(
-              fontFamily: 'Flama',
+              fontFamily: AppTheme.primaryFont,
               fontSize: 24,
               fontWeight: FontWeight.w700,
               fontStyle: FontStyle.normal

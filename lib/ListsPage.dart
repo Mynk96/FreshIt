@@ -103,7 +103,7 @@ class ListsPage extends StatelessWidget {
                     softWrap: true,
                     style: new TextStyle(
                       fontSize: 20,
-                      fontFamily: 'Flama',
+                      fontFamily: AppTheme.primaryFont,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -162,7 +162,7 @@ class ListsPage extends StatelessWidget {
                     child: new Text(
                       'Used It',
                       style: TextStyle(
-                          fontFamily: 'Flama',
+                          fontFamily: AppTheme.primaryFont,
                           fontSize: 21,
                           letterSpacing: 2,
                           color: Colors.white

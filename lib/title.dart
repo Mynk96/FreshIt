@@ -9,7 +9,7 @@ class SignInTitle extends StatelessWidget {
         child: new Text("FreshIt",
           style: TextStyle(
               fontSize: 80.0,
-              fontFamily: 'Flama',
+              fontFamily: AppTheme.primaryFont,
               letterSpacing: 0.25,
               color: AppTheme.primaryColor,
               shadows: <Shadow>[

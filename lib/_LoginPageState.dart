@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                       "SignIn",
                       style: new TextStyle(
                         fontSize: 27,
-                        fontFamily: 'flama',
+                        fontFamily: AppTheme.primaryFont,
                         color: Colors.white,
                       ),
                     ),
