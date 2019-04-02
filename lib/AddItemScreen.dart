@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freshit_flutter/AppTheme.dart';
 
 class AddItem extends StatefulWidget {
   @override
@@ -38,7 +39,7 @@ class AddItemScreen extends State<AddItem> {
               fontStyle: FontStyle.normal
           ),
         ),
-        backgroundColor: Color.fromRGBO(23, 69, 145, 1.0),
+        backgroundColor: AppTheme.primaryColor,
       ),
       body:Column(
         mainAxisSize: MainAxisSize.min,

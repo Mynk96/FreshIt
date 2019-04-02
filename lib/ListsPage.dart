@@ -1,5 +1,6 @@
 import 'dart:convert' as json;
 import 'package:flutter/material.dart';
+import 'package:freshit_flutter/AppTheme.dart';
 import 'package:freshit_flutter/item.dart';
 
 
@@ -126,7 +127,7 @@ class ListsPage extends StatelessWidget {
                         style: new TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(23, 69, 145, 1.0),
+                          color: AppTheme.primaryColor,
                         ),
                       ),
                     )
@@ -157,7 +158,7 @@ class ListsPage extends StatelessWidget {
                 Container(
                   child: new RaisedButton(
                     onPressed: ()=> null,
-                    color: Color.fromRGBO(23, 69, 145, 1.0),
+                    color: AppTheme.primaryColor,
                     child: new Text(
                       'Used It',
                       style: TextStyle(
