@@ -22,7 +22,7 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   Widget _selectedPage = ListsPage();
   GlobalKey<NavigatorState> _key = new GlobalKey(debugLabel: 'key');
-  bool _loggedIn = false;
+  bool _loggedIn = true;
 
   @override
   Widget build(BuildContext context) {
