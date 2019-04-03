@@ -4,7 +4,6 @@ import 'package:freshit_flutter/AppTheme.dart';
 import 'package:freshit_flutter/item.dart';
 
 
-
 class ListsPage extends StatelessWidget {
 
   final List<Item> _items = [];

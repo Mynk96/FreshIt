@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freshit_flutter/AppTheme.dart';
 import 'title.dart';
 import '_LoginPageState.dart';
 import '_SignInFooter.dart';
@@ -45,7 +46,7 @@ class MyAppState extends State<MyApp> {
               title: new Text(
                 "FreshIt",
                 style: new TextStyle(
-                    fontFamily: 'Flama',
+                    fontFamily: AppTheme.primaryFont,
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     fontStyle: FontStyle.normal
