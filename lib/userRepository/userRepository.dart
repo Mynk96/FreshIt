@@ -6,8 +6,9 @@ class UserRepository {
     @required String password,
   }) async {
     await Future.delayed(Duration(seconds: 3));
-    if (username=="mayank.harsani@gmail.com" && password == "12345")
+    if (username == "mayank.harsani@gmail.com" && password == "12345")
       return 'token';
+    throw Exception("Ïnvalid Login details");
   }
 
   Future<void> deleteToken() async {
@@ -15,7 +16,7 @@ class UserRepository {
   }
 
   Future<void> persistToken() async {
-    await Future.delayed(Duration(seconds :3));
+    await Future.delayed(Duration(seconds: 3));
   }
 
   Future<bool> hasToken() async {
