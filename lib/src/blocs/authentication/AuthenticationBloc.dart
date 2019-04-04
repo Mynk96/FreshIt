@@ -1,9 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationEvent.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationState.dart';
+import 'package:freshit_flutter/userRepository/userRepository.dart';
+import 'package:meta/meta.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
+  final UserRepository userRepository;
+
+  AuthenticationBloc(@required this.userRepository);
+  
   @override
   AuthenticationState get initialState => AuthenticationUninitialized();
 

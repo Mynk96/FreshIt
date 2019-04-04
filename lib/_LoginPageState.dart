@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freshit_flutter/AppTheme.dart';
+import 'package:freshit_flutter/src/blocs/Login/LoginBloc.dart';
+import 'package:freshit_flutter/src/blocs/Login/LoginEvent.dart';
+import 'package:freshit_flutter/src/blocs/authentication/AuthenticationBloc.dart';
+import 'package:freshit_flutter/userRepository/userRepository.dart';
 import 'title.dart';
 import '_SignInFooter.dart';
 class LoginPage extends StatefulWidget {
 
   final ValueChanged<bool> onLogin;
-  LoginPage(this.onLogin);
+  final UserRepository userRepository;
+
+  LoginPage({
+    this.onLogin,
+    @required this.userRepository
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -22,6 +32,16 @@ class _LoginData {
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   bool isLoggedIn = false;
+  LoginBloc _loginBloc;
+  AuthenticationBloc _authenticationBloc;
+  UserRepository get _userRepository => widget.userRepository;
+
+  @override
+  void initState() {
+    _authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
+    _loginBloc = LoginBloc(userRepository:_userRepository, authenticationBloc:_authenticationBloc);
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -89,11 +109,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
   void _checkDetails() {
-    print(this.isLoggedIn);
-    widget.onLogin(!this.isLoggedIn);
-    setState(() {
-      this.isLoggedIn = !this.isLoggedIn;
-    });
+    // print(this.isLoggedIn);
+    // widget.onLogin(!this.isLoggedIn);
+    // setState(() {
+    //   this.isLoggedIn = !this.isLoggedIn;
+    // });
+    _loginBloc.dispatch(LoginButtonClicked(
+      username:"mayank.harsani@gmail.com",
+      password:"1234"
+    ));
   }
 }
 
