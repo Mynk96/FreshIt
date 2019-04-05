@@ -1,73 +1,71 @@
 import 'dart:convert' as json;
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freshit_flutter/AppTheme.dart';
+import 'package:freshit_flutter/BottomNav.dart';
 import 'package:freshit_flutter/item.dart';
-
-
+import 'package:flutter/material.dart';
+import 'package:freshit_flutter/src/blocs/authentication/AuthenticationBloc.dart';
+import 'package:freshit_flutter/src/blocs/authentication/AuthenticationEvent.dart';
 
 class ListsPage extends StatelessWidget {
-
   final List<Item> _items = [];
   final String jsonString = json.jsonEncode({
-"items":{
-    "1": {
+    "items": {
+      "1": {
         "name": "Watermelon",
-        "imageUrl":"images/watermelon.jpg",
+        "imageUrl": "images/watermelon.jpg",
         "quantity": "1",
-        "unit":"kilogram",
+        "unit": "kilogram",
         "storedIn": "Referigerator",
-        "tags":"Fruits",
-        "expiryDate":"20190104",
-        "isWasted":false
-    },
-
-    "2": {
+        "tags": "Fruits",
+        "expiryDate": "20190104",
+        "isWasted": false
+      },
+      "2": {
         "name": "Bread",
-        "imageUrl":"images/bread.jpg",
+        "imageUrl": "images/bread.jpg",
         "quantity": "12",
-        "unit":"packets",
+        "unit": "packets",
         "storedIn": "Referigerator",
-        "tags":"Dairy",
-        "expiryDate":"20190104",
-        "isWasted":false
-    },
-
-    "3": {
+        "tags": "Dairy",
+        "expiryDate": "20190104",
+        "isWasted": false
+      },
+      "3": {
         "name": "Milk",
-        "imageUrl":"images/milk.jpg",
+        "imageUrl": "images/milk.jpg",
         "quantity": "1",
-        "unit":"packet",
+        "unit": "packet",
         "storedIn": "Referigerator",
-        "tags":"Dairy",
-        "expiryDate":"20190104",
-        "isWasted":false
-    },
-
-    "4": {
+        "tags": "Dairy",
+        "expiryDate": "20190104",
+        "isWasted": false
+      },
+      "4": {
         "name": "Spinach",
-        "imageUrl":"images/spinach.jpg",
+        "imageUrl": "images/spinach.jpg",
         "quantity": "1",
-        "unit":"kg",
+        "unit": "kg",
         "storedIn": "Referigerator",
-        "tags":"Vegetables",
-        "expiryDate":"20190104",
-        "isWasted":false
+        "tags": "Vegetables",
+        "expiryDate": "20190104",
+        "isWasted": false
+      }
     }
-    }
-});
+  });
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   Size screenSize = MediaQuery.of(context).size;
+  //   // remove from here and implement this inside bloc for ListsPage
+  //   getJsonFromFile();
+  //   return ListView(
+  //     children: _items.map((Item i) => _buildItem(i, screenSize)).toList(),
+  //   );
+  // }
 
-  @override
-  Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    // remove from here and implement this inside bloc for ListsPage
-    getJsonFromFile();
-    return ListView(
-      children: _items.map((Item i) => _buildItem(i, screenSize)).toList(),
-    );
-  }
-
-  void getJsonFromFile() async{
+  void getJsonFromFile() async {
     final parsed = json.jsonDecode(jsonString);
     print(parsed['items']['1']);
     _items.add(Item.parseItem(parsed['items']['1']));
@@ -76,105 +74,163 @@ class ListsPage extends StatelessWidget {
     _items.add(Item.parseItem(parsed['items']['4']));
   }
 
+  Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    getJsonFromFile();
+    return new Scaffold(
+      resizeToAvoidBottomPadding: false,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => print("Hello"),
+        tooltip: 'Add Item',
+        child: Icon(Icons.add),
+        elevation: 2.0,
+        backgroundColor: Color.fromRGBO(238, 238, 238, 1.0),
+        foregroundColor: Colors.black,
+      ),
+      appBar: new AppBar(
+        title: new Text(
+          "FreshIt",
+          style: new TextStyle(
+              fontFamily: AppTheme.primaryFont,
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              fontStyle: FontStyle.normal),
+        ),
+        backgroundColor: Color.fromRGBO(23, 69, 145, 1.0),
+        actions: <Widget>[
+          IconButton(
+            icon: new Icon(
+              Icons.search,
+              color: Colors.white,
+              size: 32,
+            ),
+            onPressed: () => null,
+          ),
+          IconButton(
+            icon: new Icon(
+              Icons.sort,
+              color: Colors.white,
+              size: 32,
+            ),
+            onPressed: () => BlocProvider.of<AuthenticationBloc>(context)
+                .dispatch(LoggedOut()),
+          )
+        ],
+      ),
+      body: ListView(
+        children: _items.map((Item i) => _buildItem(i, screenSize)).toList(),
+      ),
+      bottomNavigationBar: BottomNav(
+        color: Colors.white,
+        selectedColor: Colors.red,
+        items: [
+          BottomNavItem(Icons.home, 'Home'),
+          BottomNavItem(Icons.delete, 'Waste'),
+          BottomNavItem(Icons.notifications, 'Notifications'),
+          BottomNavItem(Icons.settings, 'Settings'),
+        ],
+        backgroundColor: Colors.blue,
+        onTabSelected: (int i) => print(i),
+      ),
+    );
+  }
+
   Widget _buildItem(Item item, Size screenSize) {
     return new Card(
-        margin: EdgeInsets.fromLTRB(5, 5, 0, 5),
-        child: new Row (
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              child: AspectRatio(
-                aspectRatio: 0.75,
-                child: Image.asset(
-                  item.imageUrl,
-                  fit: BoxFit.cover,
+      margin: EdgeInsets.fromLTRB(5, 5, 0, 5),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            child: AspectRatio(
+              aspectRatio: 0.75,
+              child: Image.asset(
+                item.imageUrl,
+                fit: BoxFit.cover,
+              ),
+            ),
+            width: 120,
+          ),
+          new Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 4),
+                child: new Text(
+                  item.name,
+                  softWrap: true,
+                  style: new TextStyle(
+                    fontSize: 20,
+                    fontFamily: AppTheme.primaryFont,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              width: 120,
-            ),
-            new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 4),
-                  child: new Text(
-                    item.name,
-                    softWrap: true,
-                    style: new TextStyle(
-                      fontSize: 20,
-                      fontFamily: AppTheme.primaryFont,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                new Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
-                      child: new Text(
-                        '${item.quantity} ${item.unit}',
-                        style: new TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 4, 8.0, 4),
-                      child: new Text(
-                        item.storedIn,
-                        style: new TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.primaryColor,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                // TODO : color depending on tags
-                Container(
-                  color: Color.fromRGBO(255, 82, 78, 1.0),
-                  child: Center(
-                    child: Text(
-                      item.tags,
-                    ),
-                  ),
-                  constraints: BoxConstraints.tight(Size(100, 30)),
-                  margin: const EdgeInsets.fromLTRB(8.0, 4, 8.0, 4),
-                ),
-                // Change Date format
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8.0, 4, 8.0, 4),
-                  child: Text(
-                    'Expires in: ${item.expiryDate}',
-                    style: new TextStyle(
-                        color: Colors.red,
-                        fontSize: 18
-                    ),
-                  ),
-                ),
-                Container(
-                  child: new RaisedButton(
-                    onPressed: ()=> null,
-                    color: AppTheme.primaryColor,
+              new Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
                     child: new Text(
-                      'Used It',
-                      style: TextStyle(
-                          fontFamily: AppTheme.primaryFont,
-                          fontSize: 21,
-                          letterSpacing: 2,
-                          color: Colors.white
+                      '${item.quantity} ${item.unit}',
+                      style: new TextStyle(
+                        fontSize: 16,
                       ),
                     ),
                   ),
-                  width: screenSize.width-130,
-                )
-              ],
-            )
-          ],
-        )
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8.0, 4, 8.0, 4),
+                    child: new Text(
+                      item.storedIn,
+                      style: new TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primaryColor,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              // TODO : color depending on tags
+              Container(
+                color: Color.fromRGBO(255, 82, 78, 1.0),
+                child: Center(
+                  child: Text(
+                    item.tags,
+                  ),
+                ),
+                constraints: BoxConstraints.tight(Size(100, 30)),
+                margin: const EdgeInsets.fromLTRB(8.0, 4, 8.0, 4),
+              ),
+              // Change Date format
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 4, 8.0, 4),
+                child: Text(
+                  'Expires in: ${item.expiryDate}',
+                  style: new TextStyle(color: Colors.red, fontSize: 18),
+                ),
+              ),
+              Container(
+                child: new RaisedButton(
+                  onPressed: () => null,
+                  color: AppTheme.primaryColor,
+                  child: new Text(
+                    'Used It',
+                    style: TextStyle(
+                        fontFamily: AppTheme.primaryFont,
+                        fontSize: 21,
+                        letterSpacing: 2,
+                        color: Colors.white),
+                  ),
+                ),
+                width: screenSize.width - 130,
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 
