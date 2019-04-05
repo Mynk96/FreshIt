@@ -9,7 +9,7 @@ class AuthenticationBloc
   final UserRepository userRepository;
 
   AuthenticationBloc(@required this.userRepository);
-  
+
   @override
   AuthenticationState get initialState => AuthenticationUninitialized();
 
@@ -17,13 +17,13 @@ class AuthenticationBloc
   Stream<AuthenticationState> mapEventToState(
       AuthenticationEvent event) async* {
     if (event is AppStarted) {
-      final bool hasToken = true;
+      final bool hasToken = false;
       if (hasToken)
         yield AuthenticationAuthenticated();
       else
         yield AuthenticationUnauthenticated();
     }
-    
+
     if (event is LoggedIn) {
       yield AuthenticationAuthenticated();
     }

@@ -7,7 +7,6 @@ import 'package:freshit_flutter/userRepository/userRepository.dart';
 import 'package:meta/meta.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  
   final UserRepository userRepository;
   final AuthenticationBloc authenticationBloc;
 
@@ -22,7 +21,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
     if (event is LoginButtonClicked) {
-      yield LoginLoading();
+      //yield LoginLoading();
       try {
         final String token = await userRepository.authenticate(
           username: event.username,
@@ -31,9 +30,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         authenticationBloc.dispatch(LoggedIn(token: token));
         yield LoginInitial();
       } catch (error) {
+        print(error.toString());
         yield LoginFailure(error: error.toString());
       }
+    } else if (event is ResetLoginState) {
+      yield LoginInitial();
     }
   }
-  
 }
