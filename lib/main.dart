@@ -4,6 +4,8 @@ import 'package:freshit_flutter/src/blocs/authentication/AuthenticationBloc.dart
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationEvent.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationState.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freshit_flutter/src/blocs/home/HomeRepository.dart';
+import 'package:freshit_flutter/src/models/User.dart';
 import 'package:freshit_flutter/userRepository/userRepository.dart';
 import 'title.dart';
 import '_LoginPageState.dart';
@@ -30,7 +32,7 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  Widget _selectedPage = ListsPage();
+  //Widget _selectedPage = ListsPage();
   GlobalKey<NavigatorState> _key = new GlobalKey(debugLabel: 'key');
 
   AuthenticationBloc _authenticationBloc;
@@ -52,9 +54,9 @@ class MyAppState extends State<MyApp> {
         home: BlocBuilder<AuthenticationEvent, AuthenticationState>(
           bloc: _authenticationBloc,
           builder: (BuildContext context, AuthenticationState state) {
-            if (state is AuthenticationAuthenticated)
-              return ListsPage();
-            else if (state is AuthenticationUnauthenticated ||
+            if (state is AuthenticationAuthenticated) {
+              return ListsPageState(HomeRepository(user: state.user));
+            } else if (state is AuthenticationUnauthenticated ||
                 state is AuthenticationUninitialized)
               return LoginPage(
                 userRepository: _userRepository,
@@ -68,7 +70,7 @@ class MyAppState extends State<MyApp> {
   Widget _getPageWithIndex(index) {
     switch (index) {
       case 0:
-        return ListsPage();
+      //return ListsPage();
       case 1:
         return WastePage();
       case 2:
@@ -81,7 +83,7 @@ class MyAppState extends State<MyApp> {
   void _selectedTab(index) {
     print(index);
     setState(() {
-      _selectedPage = _getPageWithIndex(index);
+      //_selectedPage = _getPageWithIndex(index);
     });
   }
 

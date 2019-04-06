@@ -1,15 +1,39 @@
 import 'dart:convert' as json;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freshit_flutter/AppTheme.dart';
 import 'package:freshit_flutter/BottomNav.dart';
+import 'package:freshit_flutter/HomePage.dart';
+import 'package:freshit_flutter/SettingsPage.dart';
+import 'package:freshit_flutter/bloc_provider.dart';
 import 'package:freshit_flutter/item.dart';
 import 'package:flutter/material.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationBloc.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationEvent.dart';
+import 'package:freshit_flutter/src/blocs/home/HomeBloc.dart';
+import 'package:freshit_flutter/src/blocs/home/HomeEvent.dart';
+import 'package:freshit_flutter/src/blocs/home/HomeRepository.dart';
+import 'package:freshit_flutter/src/blocs/home/HomeState.dart';
 
-class ListsPage extends StatelessWidget {
-  final List<Item> _items = [];
+class ListsPageState extends StatefulWidget {
+  final HomeRepository homeRepository;
+  ListsPageState(this.homeRepository);
+
+  @override
+  State<StatefulWidget> createState() {
+    return ListsPage();
+  }
+}
+
+class ListsPage extends State<ListsPageState> {
+  HomeBloc _homeBloc;
+  @override
+  void initState() {
+    _homeBloc = HomeBloc(widget.homeRepository);
+  }
+
   final String jsonString = json.jsonEncode({
     "items": {
       "1": {
@@ -65,78 +89,13 @@ class ListsPage extends StatelessWidget {
   //   );
   // }
 
-  void getJsonFromFile() async {
-    final parsed = json.jsonDecode(jsonString);
-    print(parsed['items']['1']);
-    _items.add(Item.parseItem(parsed['items']['1']));
-    _items.add(Item.parseItem(parsed['items']['2']));
-    _items.add(Item.parseItem(parsed['items']['3']));
-    _items.add(Item.parseItem(parsed['items']['4']));
-  }
+  // Widget build(BuildContext context) {
+  //   Size screenSize = MediaQuery.of(context).size;
+  //   getJsonFromFile();
 
-  Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    getJsonFromFile();
-    return new Scaffold(
-      resizeToAvoidBottomPadding: false,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => print("Hello"),
-        tooltip: 'Add Item',
-        child: Icon(Icons.add),
-        elevation: 2.0,
-        backgroundColor: Color.fromRGBO(238, 238, 238, 1.0),
-        foregroundColor: Colors.black,
-      ),
-      appBar: new AppBar(
-        title: new Text(
-          "FreshIt",
-          style: new TextStyle(
-              fontFamily: AppTheme.primaryFont,
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-              fontStyle: FontStyle.normal),
-        ),
-        backgroundColor: Color.fromRGBO(23, 69, 145, 1.0),
-        actions: <Widget>[
-          IconButton(
-            icon: new Icon(
-              Icons.search,
-              color: Colors.white,
-              size: 32,
-            ),
-            onPressed: () => null,
-          ),
-          IconButton(
-            icon: new Icon(
-              Icons.sort,
-              color: Colors.white,
-              size: 32,
-            ),
-            onPressed: () => BlocProvider.of<AuthenticationBloc>(context)
-                .dispatch(LoggedOut()),
-          )
-        ],
-      ),
-      body: ListView(
-        children: _items.map((Item i) => _buildItem(i, screenSize)).toList(),
-      ),
-      bottomNavigationBar: BottomNav(
-        color: Colors.white,
-        selectedColor: Colors.red,
-        items: [
-          BottomNavItem(Icons.home, 'Home'),
-          BottomNavItem(Icons.delete, 'Waste'),
-          BottomNavItem(Icons.notifications, 'Notifications'),
-          BottomNavItem(Icons.settings, 'Settings'),
-        ],
-        backgroundColor: Colors.blue,
-        onTabSelected: (int i) => print(i),
-      ),
-    );
-  }
+  // }
 
-  Widget _buildItem(Item item, Size screenSize) {
+  Widget _buildItem(DocumentSnapshot item, Size screenSize) {
     return new Card(
       margin: EdgeInsets.fromLTRB(5, 5, 0, 5),
       child: new Row(
@@ -145,8 +104,8 @@ class ListsPage extends StatelessWidget {
           Container(
             child: AspectRatio(
               aspectRatio: 0.75,
-              child: Image.asset(
-                item.imageUrl,
+              child: Image.network(
+                item['imageUrl'],
                 fit: BoxFit.cover,
               ),
             ),
@@ -159,7 +118,7 @@ class ListsPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 4),
                 child: new Text(
-                  item.name,
+                  item['name'],
                   softWrap: true,
                   style: new TextStyle(
                     fontSize: 20,
@@ -174,7 +133,7 @@ class ListsPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
                     child: new Text(
-                      '${item.quantity} ${item.unit}',
+                      '${item["quantity"]} ${item["unit"]}',
                       style: new TextStyle(
                         fontSize: 16,
                       ),
@@ -183,7 +142,7 @@ class ListsPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(8.0, 4, 8.0, 4),
                     child: new Text(
-                      item.storedIn,
+                      item["storedIn"],
                       style: new TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -198,7 +157,7 @@ class ListsPage extends StatelessWidget {
                 color: Color.fromRGBO(255, 82, 78, 1.0),
                 child: Center(
                   child: Text(
-                    item.tags,
+                    item["tags"],
                   ),
                 ),
                 constraints: BoxConstraints.tight(Size(100, 30)),
@@ -208,7 +167,7 @@ class ListsPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 4, 8.0, 4),
                 child: Text(
-                  'Expires in: ${item.expiryDate}',
+                  'Expires in: 2 days',
                   style: new TextStyle(color: Colors.red, fontSize: 18),
                 ),
               ),
@@ -234,6 +193,75 @@ class ListsPage extends StatelessWidget {
     );
   }
 
+  @override
+  Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    return CustomBlocProvider(
+      bloc: _homeBloc,
+      child: new Scaffold(
+        resizeToAvoidBottomPadding: false,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => print("Hello"),
+          tooltip: 'Add Item',
+          child: Icon(Icons.add),
+          elevation: 2.0,
+          backgroundColor: Color.fromRGBO(238, 238, 238, 1.0),
+          foregroundColor: Colors.black,
+        ),
+        appBar: new AppBar(
+          title: new Text(
+            "FreshIt",
+            style: new TextStyle(
+                fontFamily: AppTheme.primaryFont,
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                fontStyle: FontStyle.normal),
+          ),
+          backgroundColor: Color.fromRGBO(23, 69, 145, 1.0),
+          actions: <Widget>[
+            IconButton(
+              icon: new Icon(
+                Icons.search,
+                color: Colors.white,
+                size: 32,
+              ),
+              onPressed: () => null,
+            ),
+            IconButton(
+              icon: new Icon(
+                Icons.sort,
+                color: Colors.white,
+                size: 32,
+              ),
+              onPressed: () => BlocProvider.of<AuthenticationBloc>(context)
+                  .dispatch(LoggedOut()),
+            )
+          ],
+        ),
+        body: StreamBuilder(
+          stream: _homeBloc.selectedPage,
+          initialData: HomePage(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return Text("Loading");
+            return snapshot.data;
+          },
+        ),
+        bottomNavigationBar: BottomNav(
+          color: Colors.white,
+          selectedColor: Colors.red,
+          items: [
+            BottomNavItem(Icons.home, 'Home'),
+            BottomNavItem(Icons.delete, 'Waste'),
+            BottomNavItem(Icons.notifications, 'Notifications'),
+            BottomNavItem(Icons.settings, 'Settings'),
+          ],
+          backgroundColor: Colors.blue,
+          onTabSelected: (int i) => _homeBloc.pageIndexSubject.add(i),
+        ),
+      ),
+    );
+  }
   // @override
   // Widget build(BuildContext context) {
   //   Size screenSize = MediaQuery.of(context).size;

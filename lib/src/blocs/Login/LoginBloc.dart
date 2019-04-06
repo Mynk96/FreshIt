@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freshit_flutter/src/blocs/Login/LoginEvent.dart';
 import 'package:freshit_flutter/src/blocs/Login/LoginState.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationBloc.dart';
@@ -23,11 +24,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (event is LoginButtonClicked) {
       //yield LoginLoading();
       try {
-        final String token = await userRepository.authenticate(
+        final FirebaseUser user =
+            await userRepository.signInWithEmailAndPassword(
           username: event.username,
           password: event.password,
         );
-        authenticationBloc.dispatch(LoggedIn(token: token));
+        authenticationBloc.dispatch(LoggedIn(user: user));
         yield LoginInitial();
       } catch (error) {
         print(error.toString());
