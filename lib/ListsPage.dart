@@ -202,7 +202,7 @@ class ListsPage extends State<ListsPageState> {
         resizeToAvoidBottomPadding: false,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-          onPressed: () => print("Hello"),
+          onPressed: () => Navigator.of(context).pushNamed('/addItem'),
           tooltip: 'Add Item',
           child: Icon(Icons.add),
           elevation: 2.0,
