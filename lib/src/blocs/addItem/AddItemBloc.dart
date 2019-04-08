@@ -9,6 +9,7 @@ import 'package:freshit_flutter/bloc_provider.dart';
 import 'package:freshit_flutter/src/blocs/addItem/InputEvent.dart';
 //import 'package:freshit_flutter/src/blocs/addItem/OutputEvent.dart';
 import 'package:freshit_flutter/src/blocs/addItem/OutputState.dart';
+import 'package:freshit_flutter/src/blocs/home/HomeRepository.dart';
 
 // class AddItemBloc extends Bloc<InputEvent, OutputState> {
 //   @override
@@ -22,11 +23,35 @@ import 'package:freshit_flutter/src/blocs/addItem/OutputState.dart';
 //     }
 //   }
 class AddItemBloc extends BlocBase {
+  final HomeRepository homeRepository;
   final _imageController = new StreamController<File>();
   Stream<File> get imageStream => _imageController.stream;
   Sink<File> get imageStreamSink => _imageController.sink;
 
-  AddItemBloc() {}
+  AddItemBloc(this.homeRepository) {}
+
+  Future createNewItem(
+      {File image,
+      String name,
+      DateTime expiryDate,
+      String storedIn,
+      String unit,
+      int quantity,
+      String tags,
+      String notifyPeriod,
+      String timeUnit}) async {
+    homeRepository.createNewItem(
+        image: image,
+        name: name,
+        expiryDate: expiryDate,
+        storedIn: storedIn,
+        unit: unit,
+        quantity: quantity,
+        tags: tags,
+        notifyPeriod: notifyPeriod,
+        timeUnit: timeUnit);
+  }
+
   @override
   void dispose() {
     _imageController.close();

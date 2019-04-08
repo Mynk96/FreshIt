@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freshit_flutter/AddItemScreen.dart';
 import 'package:freshit_flutter/AppTheme.dart';
 import 'package:freshit_flutter/BottomNav.dart';
 import 'package:freshit_flutter/HomePage.dart';
@@ -195,6 +196,7 @@ class ListsPage extends State<ListsPageState> {
 
   @override
   Widget build(BuildContext context) {
+    print(context.hashCode);
     Size screenSize = MediaQuery.of(context).size;
     return CustomBlocProvider(
       bloc: _homeBloc,
@@ -202,7 +204,8 @@ class ListsPage extends State<ListsPageState> {
         resizeToAvoidBottomPadding: false,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.of(context).pushNamed('/addItem'),
+          onPressed: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddItem(_homeBloc))),
           tooltip: 'Add Item',
           child: Icon(Icons.add),
           elevation: 2.0,

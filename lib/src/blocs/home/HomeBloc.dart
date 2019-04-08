@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,9 @@ class HomeBloc implements BlocBase {
   final selectedPageController = StreamController<Widget>();
   Stream<Widget> get selectedPage => selectedPageController.stream;
   Sink<Widget> get _selectedPage => selectedPageController.sink;
-  HomeBloc(HomeRepository homeRepository) {
+  HomeRepository homeRepository;
+  HomeBloc(HomeRepository h) {
+    homeRepository = h;
     homeRepository.init().listen((onData) => _inStoredItems.add(onData));
 
     pageIndex.listen((onData) {
@@ -53,6 +56,28 @@ class HomeBloc implements BlocBase {
           break;
       }
     });
+  }
+
+  Future createNewItem(
+      {File image,
+      String name,
+      DateTime expiryDate,
+      String storedIn,
+      String unit,
+      int quantity,
+      String tags,
+      String notifyPeriod,
+      String timeUnit}) async {
+    homeRepository.createNewItem(
+        image: image,
+        name: name,
+        expiryDate: expiryDate,
+        storedIn: storedIn,
+        unit: unit,
+        quantity: quantity,
+        tags: tags,
+        notifyPeriod: notifyPeriod,
+        timeUnit: timeUnit);
   }
 
   @override

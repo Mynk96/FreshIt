@@ -12,12 +12,16 @@ import 'package:freshit_flutter/bloc_provider.dart';
 import 'package:freshit_flutter/src/blocs/addItem/AddItemBloc.dart';
 import 'package:freshit_flutter/src/blocs/addItem/InputEvent.dart';
 import 'package:freshit_flutter/src/blocs/addItem/OutputState.dart';
+import 'package:freshit_flutter/src/blocs/authentication/AuthenticationBloc.dart';
+import 'package:freshit_flutter/src/blocs/home/HomeBloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:async';
 
 import 'package:intl/intl.dart';
 
 class AddItem extends StatefulWidget {
+  final HomeBloc _homeBloc;
+  AddItem(this._homeBloc);
   @override
   State<StatefulWidget> createState() => new AddItemState();
 }
@@ -30,7 +34,8 @@ class AddItemState extends State<AddItem> {
   };
 
   InputType inputType = InputType.both;
-  final _addItemBloc = AddItemBloc();
+  //final _addItemBloc = AddItemBloc();
+  //HomeBloc _homeBloc;
   File _image;
   final _productController = new TextEditingController();
   final _quantityController = new TextEditingController();
@@ -44,7 +49,9 @@ class AddItemState extends State<AddItem> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    final _addItemBloc = AddItemBloc();
+    //final _addItemBloc = AddItemBloc();
+    final authentication = BlocProvider.of<AuthenticationBloc>(context);
+    //_homeBloc = CustomBlocProvider.of<HomeBloc>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('FreshIt'),
@@ -332,27 +339,37 @@ class AddItemState extends State<AddItem> {
   }
 
   void submitForm() async {
-    final StorageReference storageReference =
-        FirebaseStorage.instance.ref().child(_image.path);
-    final StorageUploadTask uploadTask = await storageReference.putFile(_image);
-    final StorageTaskSnapshot downloadUrl = await uploadTask.onComplete;
-    String imageUrl = await downloadUrl.ref.getDownloadURL();
-    print(downloadUrl.ref.getDownloadURL());
-    DocumentReference d = await Firestore.instance
-        .collection("Users")
-        .document("mayank.harsani@gmail.com")
-        .collection("StoredItems")
-        .add({
-      'name': _productController.text,
-      'imageUrl': imageUrl,
-      'expiryDate': expiryDate,
-      'storedIn': _storedInValue,
-      'unit': _unitsValue,
-      'quantity': int.parse(_quantityController.text),
-      'tags': 'testTag',
-      'notifyPeriod': _notifyPeriodController.text,
-      'timeUnit': _notifyTimeUnitValue
-    });
+    await widget._homeBloc.createNewItem(
+        image: _image,
+        name: _productController.text,
+        expiryDate: expiryDate,
+        storedIn: _storedInValue,
+        unit: _unitsValue,
+        quantity: int.parse(_quantityController.text),
+        tags: 'testTag',
+        notifyPeriod: _notifyPeriodController.text,
+        timeUnit: _notifyTimeUnitValue);
+    // final StorageReference storageReference =
+    //     FirebaseStorage.instance.ref().child(_image.path);
+    // final StorageUploadTask uploadTask = await storageReference.putFile(_image);
+    // final StorageTaskSnapshot downloadUrl = await uploadTask.onComplete;
+    // String imageUrl = await downloadUrl.ref.getDownloadURL();
+    // print(downloadUrl.ref.getDownloadURL());
+    // DocumentReference d = await Firestore.instance
+    //     .collection("Users")
+    //     .document("mayank.harsani@gmail.com")
+    //     .collection("StoredItems")
+    //     .add({
+    //   'name': _productController.text,
+    //   'imageUrl': imageUrl,
+    //   'expiryDate': expiryDate,
+    //   'storedIn': _storedInValue,
+    //   'unit': _unitsValue,
+    //   'quantity': int.parse(_quantityController.text),
+    //   'tags': 'testTag',
+    //   'notifyPeriod': _notifyPeriodController.text,
+    //   'timeUnit': _notifyTimeUnitValue
+    // });
     //print(DateTime.par_expiryDateController.text);
     Navigator.of(context).pop();
   }

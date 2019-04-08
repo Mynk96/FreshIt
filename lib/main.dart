@@ -37,6 +37,7 @@ class MyAppState extends State<MyApp> {
 
   AuthenticationBloc _authenticationBloc;
   UserRepository get _userRepository => widget.userRepository;
+  HomeRepository homeRepository;
 
   @override
   void initState() {
@@ -47,6 +48,7 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    print(context.hashCode);
     return BlocProvider<AuthenticationBloc>(
       bloc: _authenticationBloc,
       child: new MaterialApp(
@@ -63,9 +65,6 @@ class MyAppState extends State<MyApp> {
               );
           },
         ),
-        routes: <String, WidgetBuilder>{
-          '/addItem': (context) => new AddItem(),
-        },
       ),
     );
   }
