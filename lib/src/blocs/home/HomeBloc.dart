@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freshit_flutter/HomePage.dart';
 import 'package:freshit_flutter/NotificationsPage.dart';
 import 'package:freshit_flutter/SettingsPage.dart';
@@ -23,7 +24,6 @@ class HomeBloc implements BlocBase {
   final selectedPageController = StreamController<Widget>();
   Stream<Widget> get selectedPage => selectedPageController.stream;
   Sink<Widget> get _selectedPage => selectedPageController.sink;
-
   HomeBloc(HomeRepository homeRepository) {
     homeRepository.init().listen((onData) => _inStoredItems.add(onData));
 

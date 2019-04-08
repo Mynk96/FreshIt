@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,20 +15,30 @@ import 'package:freshit_flutter/src/blocs/addItem/OutputState.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:async';
 
+import 'package:intl/intl.dart';
+
 class AddItem extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new AddItemState();
 }
 
 class AddItemState extends State<AddItem> {
+  final formats = {
+    InputType.both: DateFormat("EEEE, MMMM d, yyyy 'at' h:mma"),
+    InputType.date: DateFormat('yyyy-MM-dd'),
+    InputType.time: DateFormat("HH:mm"),
+  };
+
+  InputType inputType = InputType.both;
   final _addItemBloc = AddItemBloc();
   File _image;
   final _productController = new TextEditingController();
   final _quantityController = new TextEditingController();
-  final _expiryDateController = new TextEditingController();
+  DateTime expiryDate;
+  final _notifyPeriodController = new TextEditingController();
   String _unitsValue = "packets";
   String _storedInValue = "Referigerator";
-
+  String _notifyTimeUnitValue = "days";
   List<DropdownMenuItem<String>> opt = [];
   GlobalKey<FormState> _key = new GlobalKey();
   @override
@@ -131,6 +142,8 @@ class AddItemState extends State<AddItem> {
   Widget showImageWithDetails(Size screenSize) {
     List<DropdownMenuItem<String>> unitsOptions = [];
     List<DropdownMenuItem<String>> storedInOptions = [];
+    List<DropdownMenuItem<String>> notifyOptions = [];
+
     unitsOptions.add(DropdownMenuItem(
       value: 'packets',
       child: new Text('packets'),
@@ -144,6 +157,21 @@ class AddItemState extends State<AddItem> {
     storedInOptions.add(DropdownMenuItem(
       value: 'Referigerator',
       child: new Text('Referigerator'),
+    ));
+
+    notifyOptions.add(DropdownMenuItem(
+      value: 'days',
+      child: new Text('days'),
+    ));
+
+    notifyOptions.add(DropdownMenuItem(
+      value: 'hours',
+      child: new Text('hours'),
+    ));
+
+    notifyOptions.add(DropdownMenuItem(
+      value: 'minutes',
+      child: new Text('minutes'),
     ));
 
     return Container(
@@ -195,15 +223,25 @@ class AddItemState extends State<AddItem> {
                 )
               ],
             ),
-            new TextFormField(
-                keyboardType: TextInputType.datetime,
-                decoration: InputDecoration(
-                  labelText: 'Expiry Date',
-                ),
-                controller: _expiryDateController,
-                validator: (value) {
-                  if (value.isEmpty) return "Please Enter Text";
-                }),
+            // new TextFormField(
+            //     keyboardType: TextInputType.datetime,
+            //     decoration: InputDecoration(
+            //       labelText: 'Expiry Date',
+            //     ),
+            //     controller: _expiryDateController,
+            //     validator: (value) {
+            //       if (value.isEmpty) return "Please Enter Text";
+            //     }),
+            DateTimePickerFormField(
+              inputType: inputType,
+              format: formats[inputType],
+              editable: false,
+              decoration: InputDecoration(labelText: 'Expiry Date'),
+              validator: (val) {
+                if (val == null) return "Please Enter";
+              },
+              onChanged: (date) => expiryDate = date,
+            ),
             new Row(
               children: <Widget>[
                 Expanded(
@@ -218,6 +256,33 @@ class AddItemState extends State<AddItem> {
                         )),
                   ),
                 ),
+              ],
+            ),
+            new Row(
+              children: <Widget>[
+                Container(
+                  width: 100,
+                  child: new TextFormField(
+                      keyboardType: TextInputType.numberWithOptions(),
+                      decoration: InputDecoration(
+                        labelText: 'Notify Before',
+                      ),
+                      controller: _notifyPeriodController,
+                      validator: (value) {
+                        if (value.isEmpty) return "Please Enter Text";
+                      }),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: new DropdownButtonFormField(
+                    value: _notifyTimeUnitValue,
+                    items: notifyOptions,
+                    onChanged: (val) => _notifyTimeUnitValue = val,
+                    decoration: InputDecoration(),
+                  ),
+                )
               ],
             ),
             Padding(
@@ -263,7 +328,6 @@ class AddItemState extends State<AddItem> {
   void dispose() {
     _productController.dispose();
     _quantityController.dispose();
-    _expiryDateController.dispose();
     super.dispose();
   }
 
@@ -281,13 +345,15 @@ class AddItemState extends State<AddItem> {
         .add({
       'name': _productController.text,
       'imageUrl': imageUrl,
-      'expiryDate': getDate(_expiryDateController.text),
+      'expiryDate': expiryDate,
       'storedIn': _storedInValue,
       'unit': _unitsValue,
       'quantity': int.parse(_quantityController.text),
-      'tags': 'testTag'
+      'tags': 'testTag',
+      'notifyPeriod': _notifyPeriodController.text,
+      'timeUnit': _notifyTimeUnitValue
     });
-    print(_expiryDateController.text);
+    //print(DateTime.par_expiryDateController.text);
     Navigator.of(context).pop();
   }
 

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freshit_flutter/AppTheme.dart';
 import 'package:freshit_flutter/bloc_provider.dart';
 import 'package:freshit_flutter/src/blocs/home/HomeBloc.dart';
@@ -11,6 +12,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  @override
+  void initState() {
+    super.initState();
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+// initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -20,9 +37,18 @@ class _HomePageState extends State<HomePage> {
       initialData: null,
       builder: (context, snapshot) {
         if (!snapshot.hasData) return Text("Loading");
+        if (snapshot.data.documents.length == 0) {
+          return Center(
+            child: Text(
+              "Please Add Items",
+              style: TextStyle(fontFamily: AppTheme.primaryFont, fontSize: 30),
+            ),
+          );
+        }
         return ListView.builder(
           itemCount: snapshot.data.documents.length,
           itemBuilder: (context, index) {
+            scheduleNotifications(snapshot.data.documents[index], index);
             return _buildItem(snapshot.data.documents[index], screenSize);
           },
         );
@@ -145,5 +171,48 @@ class _HomePageState extends State<HomePage> {
       ),
       width: screenSize.width - 130,
     );
+  }
+
+  Future onSelectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: ' + payload);
+    }
+    await Future.delayed(Duration(seconds: 3));
+  }
+
+  Future scheduleNotifications(DocumentSnapshot item, int index) async {
+    var scheduledNotificationDateTime = calculateSchedulingDateTime(
+        item.data["expiryDate"],
+        int.parse(item.data["notifyPeriod"]),
+        item.data["timeUnit"]);
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'your other channel id',
+        'your other channel name',
+        'your other channel description');
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    NotificationDetails platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.schedule(
+        index,
+        item.data["name"],
+        item.data["storedIn"],
+        scheduledNotificationDateTime,
+        platformChannelSpecifics);
+    print("hello");
+  }
+
+  DateTime calculateSchedulingDateTime(
+      Timestamp t, int notifyPeriod, String units) {
+    int millis = 0;
+    if (units == "days")
+      millis = (notifyPeriod) * 86400000;
+    else if (units == "hours")
+      millis = (notifyPeriod) * 3600000;
+    else
+      millis = (notifyPeriod) * 60000;
+    int expiryTime = t.toDate().millisecondsSinceEpoch;
+    if (expiryTime < DateTime.now().millisecondsSinceEpoch)
+      return DateTime.now().add(Duration(seconds: 10));
+    return DateTime.fromMillisecondsSinceEpoch(expiryTime - millis);
   }
 }
