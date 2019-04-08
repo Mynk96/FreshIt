@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildItem(DocumentSnapshot item, Size screenSize) {
+    String expirePeriod = getExpiresIn(item["expiryDate"]);
     return new Card(
       margin: EdgeInsets.fromLTRB(5, 5, 0, 5),
       child: new Row(
@@ -102,29 +103,47 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 4, 8.0, 4),
                 child: Text(
-                  'Expires in: 2 days',
+                  'Expires in: $expirePeriod',
                   style: new TextStyle(color: Colors.red, fontSize: 18),
                 ),
               ),
-              Container(
-                child: new RaisedButton(
-                  onPressed: () => null,
-                  color: AppTheme.primaryColor,
-                  child: new Text(
-                    'Used It',
-                    style: TextStyle(
-                        fontFamily: AppTheme.primaryFont,
-                        fontSize: 21,
-                        letterSpacing: 2,
-                        color: Colors.white),
-                  ),
-                ),
-                width: screenSize.width - 130,
-              )
+              (expirePeriod != "Expired") ? showButton(screenSize) : Text(""),
             ],
           )
         ],
       ),
+    );
+  }
+
+  String getExpiresIn(Timestamp t) {
+    var diff = t.toDate().difference(DateTime.now());
+    print(diff.inDays);
+    if (diff.inDays > 0)
+      return "${diff.inDays} " + ((diff.inDays == 1) ? "day" : "days");
+    else if (diff.inDays <= 0 && diff.inHours > 0)
+      return "${diff.inHours} " + ((diff.inHours == 1 ? "hour" : "hours"));
+    else if (diff.inHours <= 0 && diff.inMinutes > 0)
+      return "${diff.inMinutes} minutes" +
+          ((diff.inMinutes == 1 ? "minute" : "minutes"));
+    else
+      return "Expired";
+  }
+
+  Widget showButton(Size screenSize) {
+    return Container(
+      child: new RaisedButton(
+        onPressed: () => null,
+        color: AppTheme.primaryColor,
+        child: new Text(
+          'Used It',
+          style: TextStyle(
+              fontFamily: AppTheme.primaryFont,
+              fontSize: 21,
+              letterSpacing: 2,
+              color: Colors.white),
+        ),
+      ),
+      width: screenSize.width - 130,
     );
   }
 }

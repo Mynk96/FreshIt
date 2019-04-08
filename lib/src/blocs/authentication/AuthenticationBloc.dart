@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationEvent.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationState.dart';
 import 'package:freshit_flutter/src/models/User.dart';
@@ -18,9 +19,12 @@ class AuthenticationBloc
   Stream<AuthenticationState> mapEventToState(
       AuthenticationEvent event) async* {
     if (event is AppStarted) {
-      final bool hasToken = false;
+      final bool hasToken = await userRepository.hasToken();
+      print(hasToken);
+      print("Appstarted");
       if (hasToken) {
-        //yield AuthenticationAuthenticated(user: event.user);
+        FirebaseUser user = await userRepository.getUserWithToken();
+        yield AuthenticationAuthenticated(user: user);
       } else
         yield AuthenticationUnauthenticated();
     }
@@ -30,6 +34,7 @@ class AuthenticationBloc
     }
 
     if (event is LoggedOut) {
+      userRepository.deleteToken();
       yield AuthenticationUnauthenticated();
     }
   }

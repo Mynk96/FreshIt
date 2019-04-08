@@ -37,11 +37,11 @@ class AddItemState extends State<AddItem> {
     return Scaffold(
       appBar: AppBar(
         title: Text('FreshIt'),
+        backgroundColor: AppTheme.primaryColor,
       ),
       resizeToAvoidBottomPadding: true,
       body: ListView(
         children: <Widget>[
-          Text("Click the image of the product"),
           FlatButton(
             child: Icon(Icons.add_a_photo),
             onPressed: getImage,
@@ -112,13 +112,23 @@ class AddItemState extends State<AddItem> {
           //     ),
           //   ),
           // )
-          (_image != null) ? showImageWithDetails() : Text("No image"),
+          (_image != null)
+              ? showImageWithDetails(MediaQuery.of(context).size)
+              : Center(
+                  child: Text(
+                  "No image Uploaded",
+                  style: TextStyle(
+                    fontFamily: AppTheme.primaryFont,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w100,
+                  ),
+                )),
         ],
       ),
     );
   }
 
-  Widget showImageWithDetails() {
+  Widget showImageWithDetails(Size screenSize) {
     List<DropdownMenuItem<String>> unitsOptions = [];
     List<DropdownMenuItem<String>> storedInOptions = [];
     unitsOptions.add(DropdownMenuItem(
@@ -140,6 +150,7 @@ class AddItemState extends State<AddItem> {
       margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
       child: new Form(
         key: this._key,
+        autovalidate: true,
         child: new Column(
           children: <Widget>[
             Container(
@@ -151,18 +162,23 @@ class AddItemState extends State<AddItem> {
                 labelText: 'Product Name',
               ),
               controller: _productController,
+              validator: (value) {
+                if (value.isEmpty) return "Please Enter Text";
+              },
             ),
             new Row(
               children: <Widget>[
                 Container(
                   width: 100,
                   child: new TextFormField(
-                    keyboardType: TextInputType.numberWithOptions(),
-                    decoration: InputDecoration(
-                      labelText: 'Quantity',
-                    ),
-                    controller: _quantityController,
-                  ),
+                      keyboardType: TextInputType.numberWithOptions(),
+                      decoration: InputDecoration(
+                        labelText: 'Quantity',
+                      ),
+                      controller: _quantityController,
+                      validator: (value) {
+                        if (value.isEmpty) return "Please Enter Text";
+                      }),
                 ),
                 SizedBox(
                   width: 20,
@@ -180,12 +196,14 @@ class AddItemState extends State<AddItem> {
               ],
             ),
             new TextFormField(
-              keyboardType: TextInputType.datetime,
-              decoration: InputDecoration(
-                labelText: 'Expiry Date',
-              ),
-              controller: _expiryDateController,
-            ),
+                keyboardType: TextInputType.datetime,
+                decoration: InputDecoration(
+                  labelText: 'Expiry Date',
+                ),
+                controller: _expiryDateController,
+                validator: (value) {
+                  if (value.isEmpty) return "Please Enter Text";
+                }),
             new Row(
               children: <Widget>[
                 Expanded(
@@ -204,21 +222,26 @@ class AddItemState extends State<AddItem> {
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),
-              child: new RaisedButton(
-                onPressed: submitForm, //_checkDetails(),
-                padding: EdgeInsets.all(10),
-                child: new Text(
-                  "SignIn",
-                  style: new TextStyle(
-                    fontSize: 28,
-                    fontFamily: AppTheme.primaryFont,
-                    color: Colors.white,
+              child: Container(
+                width: screenSize.width,
+                child: new RaisedButton(
+                  onPressed: () {
+                    if (_key.currentState.validate()) submitForm();
+                  }, //_checkDetails(),
+                  padding: EdgeInsets.all(8),
+                  child: new Text(
+                    "Upload Item",
+                    style: new TextStyle(
+                      fontSize: 22,
+                      fontFamily: AppTheme.primaryFont,
+                      color: Colors.white,
+                    ),
                   ),
+                  color: AppTheme.primaryColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(25)),
+                      side: BorderSide()),
                 ),
-                color: AppTheme.primaryColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                    side: BorderSide()),
               ),
             ),
           ],
@@ -250,7 +273,7 @@ class AddItemState extends State<AddItem> {
     final StorageUploadTask uploadTask = await storageReference.putFile(_image);
     final StorageTaskSnapshot downloadUrl = await uploadTask.onComplete;
     String imageUrl = await downloadUrl.ref.getDownloadURL();
-    //print(downloadUrl.ref.getDownloadURL());
+    print(downloadUrl.ref.getDownloadURL());
     DocumentReference d = await Firestore.instance
         .collection("Users")
         .document("mayank.harsani@gmail.com")
@@ -258,12 +281,18 @@ class AddItemState extends State<AddItem> {
         .add({
       'name': _productController.text,
       'imageUrl': imageUrl,
-      'expiryDate': DateTime.now(),
+      'expiryDate': getDate(_expiryDateController.text),
       'storedIn': _storedInValue,
       'unit': _unitsValue,
       'quantity': int.parse(_quantityController.text),
       'tags': 'testTag'
     });
+    print(_expiryDateController.text);
     Navigator.of(context).pop();
+  }
+
+  DateTime getDate(String text) {
+    List<String> i = text.split("/");
+    return DateTime(int.parse(i[0]), int.parse(i[1]), int.parse(i[2]));
   }
 }
