@@ -63,8 +63,8 @@ class MyAppState extends State<MyApp> {
               );
           },
         ),
-        routes: <String, WidgetBuilder> {
-          '/addItem':(context) => new AddItem();
+        routes: <String, WidgetBuilder>{
+          '/addItem': (context) => new AddItem(),
         },
       ),
     );
