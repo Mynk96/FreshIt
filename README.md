@@ -1,7 +1,7 @@
 # FreshIt
 
 ### Team
-Member 1 : Ayush Agrawal, 2017A8PS0604G, f20170604@goa.bits-pilani.ac.in, Tensorflow model Development
+Member 1 : Ayush Agrawal, 2017A8PS0604G, f20170604@goa.bits-pilani.ac.in, Tensorflow model Development  
 Member 2 : Mayank Harsani, 2015A7PS0010G, f20150010@goa.bits-pilani.ac.in, Application UI and Backend Development 
 
 ### Motivation
