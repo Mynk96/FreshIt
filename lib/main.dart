@@ -41,6 +41,7 @@ class MyAppState extends State<MyApp> {
       bloc: _authenticationBloc,
       child: new MaterialApp(
         title: 'FreshIt',
+        debugShowCheckedModeBanner: false,
         home: BlocBuilder<AuthenticationEvent, AuthenticationState>(
           bloc: _authenticationBloc,
           builder: (BuildContext context, AuthenticationState state) {
