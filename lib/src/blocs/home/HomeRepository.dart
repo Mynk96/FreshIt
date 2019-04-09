@@ -22,7 +22,7 @@ class HomeRepository extends Equatable {
         .snapshots();
   }
 
-  Future createNewItem(
+  void createNewItem(
       {File image,
       String name,
       DateTime expiryDate,
@@ -52,5 +52,14 @@ class HomeRepository extends Equatable {
       'notifyPeriod': notifyPeriod,
       'timeUnit': timeUnit
     });
+  }
+
+  void useItem(String id) async {
+    await db
+        .collection("Users")
+        .document(user.email)
+        .collection("StoredItems")
+        .document(id)
+        .delete();
   }
 }

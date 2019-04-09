@@ -58,7 +58,7 @@ class HomeBloc implements BlocBase {
     });
   }
 
-  Future createNewItem(
+  void createNewItem(
       {File image,
       String name,
       DateTime expiryDate,
@@ -67,7 +67,7 @@ class HomeBloc implements BlocBase {
       int quantity,
       String tags,
       String notifyPeriod,
-      String timeUnit}) async {
+      String timeUnit}) {
     homeRepository.createNewItem(
         image: image,
         name: name,
@@ -78,6 +78,10 @@ class HomeBloc implements BlocBase {
         tags: tags,
         notifyPeriod: notifyPeriod,
         timeUnit: timeUnit);
+  }
+
+  void useItem(String id) {
+    homeRepository.useItem(id);
   }
 
   @override

@@ -336,8 +336,8 @@ class AddItemState extends State<AddItem> {
     super.dispose();
   }
 
-  void submitForm() async {
-    await widget._homeBloc.createNewItem(
+  void submitForm() {
+    widget._homeBloc.createNewItem(
         image: _image,
         name: _productController.text,
         expiryDate: expiryDate,

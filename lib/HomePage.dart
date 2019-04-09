@@ -13,6 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  HomeBloc _homeBloc;
   @override
   void initState() {
     super.initState();
@@ -31,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    final _homeBloc = CustomBlocProvider.of<HomeBloc>(context);
+    _homeBloc = CustomBlocProvider.of<HomeBloc>(context);
     return StreamBuilder(
       stream: _homeBloc.storedItems,
       initialData: null,
@@ -133,7 +134,9 @@ class _HomePageState extends State<HomePage> {
                   style: new TextStyle(color: Colors.red, fontSize: 18),
                 ),
               ),
-              (expirePeriod != "Expired") ? showButton(screenSize) : Text(""),
+              (expirePeriod != "Expired")
+                  ? showButton(screenSize, item.documentID)
+                  : Text(""),
             ],
           )
         ],
@@ -155,10 +158,10 @@ class _HomePageState extends State<HomePage> {
       return "Expired";
   }
 
-  Widget showButton(Size screenSize) {
+  Widget showButton(Size screenSize, String documentId) {
     return Container(
       child: new RaisedButton(
-        onPressed: () => null,
+        onPressed: () => test(documentId),
         color: AppTheme.primaryColor,
         child: new Text(
           'Used It',
@@ -216,5 +219,9 @@ class _HomePageState extends State<HomePage> {
     if ((expiryTime - millis) < DateTime.now().millisecondsSinceEpoch)
       return DateTime.fromMillisecondsSinceEpoch(expiryTime - 3600000);
     return DateTime.fromMillisecondsSinceEpoch(expiryTime - millis);
+  }
+
+  void test(String id) {
+    _homeBloc.useItem(id);
   }
 }
