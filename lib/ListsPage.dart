@@ -225,20 +225,13 @@ class ListsPage extends State<ListsPageState> {
           actions: <Widget>[
             IconButton(
               icon: new Icon(
-                Icons.search,
-                color: Colors.white,
-                size: 32,
-              ),
-              onPressed: () => null,
-            ),
-            IconButton(
-              icon: new Icon(
-                Icons.sort,
+                Icons.exit_to_app,
                 color: Colors.white,
                 size: 32,
               ),
               onPressed: () => BlocProvider.of<AuthenticationBloc>(context)
                   .dispatch(LoggedOut()),
+              tooltip: "Logout",
             )
           ],
         ),
@@ -255,8 +248,8 @@ class ListsPage extends State<ListsPageState> {
           selectedColor: Colors.red,
           items: [
             BottomNavItem(Icons.home, 'Home'),
-            BottomNavItem(Icons.delete, 'Waste'),
-            BottomNavItem(Icons.notifications, 'Notifications'),
+            //BottomNavItem(Icons.delete, 'Waste'),
+            //BottomNavItem(Icons.notifications, 'Notifications'),
             BottomNavItem(Icons.settings, 'Settings'),
           ],
           backgroundColor: Colors.blue,

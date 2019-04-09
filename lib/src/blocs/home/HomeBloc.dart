@@ -39,16 +39,6 @@ class HomeBloc implements BlocBase {
           }
         case 1:
           {
-            _selectedPage.add(WastePage());
-            break;
-          }
-        case 2:
-          {
-            _selectedPage.add(NotificationsPage());
-            break;
-          }
-        case 3:
-          {
             _selectedPage.add(SettingsPage());
             break;
           }
