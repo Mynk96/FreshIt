@@ -34,8 +34,6 @@ class AddItemState extends State<AddItem> {
   };
 
   InputType inputType = InputType.both;
-  //final _addItemBloc = AddItemBloc();
-  //HomeBloc _homeBloc;
   File _image;
   final _productController = new TextEditingController();
   final _quantityController = new TextEditingController();
