@@ -195,7 +195,7 @@ class _HomePageState extends State<HomePage> {
     await flutterLocalNotificationsPlugin.schedule(
         index,
         item.data["name"],
-        item.data["storedIn"],
+        "stored in ${item.data["storedIn"]} will expire in ${item.data["notifyPeriod"]} ${item.data["timeUnit"]}",
         scheduledNotificationDateTime,
         platformChannelSpecifics);
     print("hello");
@@ -211,8 +211,10 @@ class _HomePageState extends State<HomePage> {
     else
       millis = (notifyPeriod) * 60000;
     int expiryTime = t.toDate().millisecondsSinceEpoch;
-    if (expiryTime < DateTime.now().millisecondsSinceEpoch)
-      return DateTime.now().add(Duration(seconds: 10));
+    print(expiryTime - millis);
+    print(DateTime.now().millisecondsSinceEpoch);
+    if ((expiryTime - millis) < DateTime.now().millisecondsSinceEpoch)
+      return DateTime.fromMillisecondsSinceEpoch(expiryTime - 3600000);
     return DateTime.fromMillisecondsSinceEpoch(expiryTime - millis);
   }
 }

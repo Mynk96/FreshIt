@@ -28,7 +28,7 @@ class HomeBloc implements BlocBase {
   HomeRepository homeRepository;
   HomeBloc(HomeRepository h) {
     homeRepository = h;
-    homeRepository.init().listen((onData) => _inStoredItems.add(onData));
+    h.init().listen((onData) => _inStoredItems.add(onData));
 
     pageIndex.listen((onData) {
       switch (onData) {
