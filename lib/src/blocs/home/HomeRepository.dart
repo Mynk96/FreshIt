@@ -34,7 +34,6 @@ class HomeRepository extends Equatable {
     final StorageUploadTask uploadTask = storageReference.putFile(image);
     final StorageTaskSnapshot downloadUrl = await uploadTask.onComplete;
     String imageUrl = await downloadUrl.ref.getDownloadURL();
-    print(downloadUrl.ref.getDownloadURL());
     await db
         .collection("Users")
         .document(user.email)

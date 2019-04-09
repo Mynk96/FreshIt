@@ -18,10 +18,6 @@ class UserRepository {
     } catch (error) {
       throw error.message;
     }
-    // await Future.delayed(Duration(seconds: 3));
-    // if (username == "mayank.harsani@gmail.com" && password == "12345")
-    //   return 'token';
-    // throw Exception("Ïnvalid Login details");
   }
 
   Future<void> deleteToken() async {
@@ -36,8 +32,6 @@ class UserRepository {
   Future<bool> hasToken() async {
     String u = await storage.read(key: "email");
     String p = await storage.read(key: "password");
-    print(u);
-    print(p);
     if (u != null && p != null) return true;
     return false;
   }
@@ -46,7 +40,6 @@ class UserRepository {
     FirebaseUser user = await _firebaseAuth.signInWithEmailAndPassword(
         email: await storage.read(key: "email"),
         password: await storage.read(key: "password"));
-    print(user);
     return user;
   }
 }
