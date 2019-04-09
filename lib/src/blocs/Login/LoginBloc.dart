@@ -5,7 +5,6 @@ import 'package:freshit_flutter/src/blocs/Login/LoginState.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationBloc.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationEvent.dart';
 import 'package:freshit_flutter/userRepository/userRepository.dart';
-import 'package:meta/meta.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final UserRepository userRepository;

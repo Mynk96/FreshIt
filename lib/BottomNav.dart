@@ -5,18 +5,16 @@ class BottomNavItem {
   final String text;
   BottomNavItem(this.icon, this.text);
 }
-class BottomNav extends StatefulWidget {
-  BottomNav({
-    this.items,
-    this.height: 60,
-    this.iconSize: 40.0,
-    this.color,
-    this.backgroundColor,
-    this.selectedColor,
-    this.onTabSelected
-  }) {
 
-  }
+class BottomNav extends StatefulWidget {
+  BottomNav(
+      {this.items,
+      this.height: 60,
+      this.iconSize: 40.0,
+      this.color,
+      this.backgroundColor,
+      this.selectedColor,
+      this.onTabSelected});
 
   final List<BottomNavItem> items;
   final Color color;
@@ -41,6 +39,7 @@ class BottomNavState extends State<BottomNav> {
       _selectedIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> items = List.generate(widget.items.length, (int index) {
@@ -73,9 +72,9 @@ class BottomNavState extends State<BottomNav> {
   }) {
     return new Expanded(
       child: SizedBox(
-        height:widget.height,
+        height: widget.height,
         child: InkWell(
-          onTap: ()=>onPressed(index),
+          onTap: () => onPressed(index),
           splashColor: Colors.blueAccent,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -84,13 +83,17 @@ class BottomNavState extends State<BottomNav> {
               Icon(
                 item.icon,
                 size: widget.iconSize,
-                color: _selectedIndex == index ? Colors.blueAccent:Colors.black54,
+                color: _selectedIndex == index
+                    ? Colors.blueAccent
+                    : Colors.black54,
               ),
               Text(
                 item.text,
                 style: TextStyle(
-                  color: _selectedIndex == index ? Colors.blueAccent:Colors.black54
-                ),)
+                    color: _selectedIndex == index
+                        ? Colors.blueAccent
+                        : Colors.black54),
+              )
             ],
           ),
         ),

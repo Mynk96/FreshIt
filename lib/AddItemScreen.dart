@@ -1,22 +1,10 @@
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:freshit_flutter/AddItemInputField.dart';
-import 'package:freshit_flutter/AddItemInputOne.dart';
 import 'package:freshit_flutter/AppTheme.dart';
-import 'package:freshit_flutter/bloc_provider.dart';
-import 'package:freshit_flutter/src/blocs/addItem/AddItemBloc.dart';
-import 'package:freshit_flutter/src/blocs/addItem/InputEvent.dart';
-import 'package:freshit_flutter/src/blocs/addItem/OutputState.dart';
-import 'package:freshit_flutter/src/blocs/authentication/AuthenticationBloc.dart';
 import 'package:freshit_flutter/src/blocs/home/HomeBloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:async';
-
 import 'package:intl/intl.dart';
 
 class AddItem extends StatefulWidget {
@@ -46,10 +34,6 @@ class AddItemState extends State<AddItem> {
   GlobalKey<FormState> _key = new GlobalKey();
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    //final _addItemBloc = AddItemBloc();
-    final authentication = BlocProvider.of<AuthenticationBloc>(context);
-    //_homeBloc = CustomBlocProvider.of<HomeBloc>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('FreshIt'),
@@ -62,72 +46,6 @@ class AddItemState extends State<AddItem> {
             child: Icon(Icons.add_a_photo),
             onPressed: getImage,
           ),
-          // Image.file(_image),
-          // Container(
-          //   margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
-          //   child: new Form(
-          //     key: this._key,
-          //     child: new Column(
-          //       children: <Widget>[
-          //         new TextFormField(
-          //           keyboardType: TextInputType.text,
-          //           decoration: InputDecoration(
-          //             labelText: 'Product Name',
-          //           ),
-          //         ),
-          //         new Row(
-          //           children: <Widget>[
-          //             Container(
-          //               width: 100,
-          //               child: new TextFormField(
-          //                 keyboardType: TextInputType.numberWithOptions(),
-          //                 decoration: InputDecoration(
-          //                   labelText: 'Quantity',
-          //                 ),
-          //               ),
-          //             ),
-          //             SizedBox(
-          //               width: 20,
-          //             ),
-          //             Expanded(
-          //               child: new DropdownButtonFormField(
-          //                 value: 'packets',
-          //                 items: opt,
-          //                 onChanged: (val) => print(val),
-          //                 decoration: InputDecoration(
-          //                   labelText: 'Units',
-          //                 ),
-          //               ),
-          //             )
-          //           ],
-          //         ),
-          //         new TextFormField(
-          //           keyboardType: TextInputType.datetime,
-          //           decoration: InputDecoration(
-          //             labelText: 'Expiry Date',
-          //           ),
-          //         ),
-          //         new Row(
-          //           children: <Widget>[
-          //             Expanded(
-          //               child: new DropdownButtonFormField(
-          //                 value: 'packets',
-          //                 items: opt,
-          //                 onChanged: (val) => print(val),
-          //                 decoration: InputDecoration(
-          //                     labelText: 'Stored In',
-          //                     labelStyle: TextStyle(
-          //                       fontSize: 20,
-          //                     )),
-          //               ),
-          //             )
-          //           ],
-          //         ),
-          //         new Text("Hello"),
-          //       ],
-          //     ),
-          //   ),
-          // )
           (_image != null)
               ? showImageWithDetails(MediaQuery.of(context).size)
               : Center(
@@ -228,15 +146,6 @@ class AddItemState extends State<AddItem> {
                 )
               ],
             ),
-            // new TextFormField(
-            //     keyboardType: TextInputType.datetime,
-            //     decoration: InputDecoration(
-            //       labelText: 'Expiry Date',
-            //     ),
-            //     controller: _expiryDateController,
-            //     validator: (value) {
-            //       if (value.isEmpty) return "Please Enter Text";
-            //     }),
             DateTimePickerFormField(
               inputType: inputType,
               format: formats[inputType],
@@ -322,11 +231,9 @@ class AddItemState extends State<AddItem> {
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    // print("mg");
     setState(() {
       _image = image;
     });
-    //_addItemBloc.imageStreamSink.add(image);
   }
 
   @override
@@ -347,28 +254,6 @@ class AddItemState extends State<AddItem> {
         tags: 'testTag',
         notifyPeriod: _notifyPeriodController.text,
         timeUnit: _notifyTimeUnitValue);
-    // final StorageReference storageReference =
-    //     FirebaseStorage.instance.ref().child(_image.path);
-    // final StorageUploadTask uploadTask = await storageReference.putFile(_image);
-    // final StorageTaskSnapshot downloadUrl = await uploadTask.onComplete;
-    // String imageUrl = await downloadUrl.ref.getDownloadURL();
-    // print(downloadUrl.ref.getDownloadURL());
-    // DocumentReference d = await Firestore.instance
-    //     .collection("Users")
-    //     .document("mayank.harsani@gmail.com")
-    //     .collection("StoredItems")
-    //     .add({
-    //   'name': _productController.text,
-    //   'imageUrl': imageUrl,
-    //   'expiryDate': expiryDate,
-    //   'storedIn': _storedInValue,
-    //   'unit': _unitsValue,
-    //   'quantity': int.parse(_quantityController.text),
-    //   'tags': 'testTag',
-    //   'notifyPeriod': _notifyPeriodController.text,
-    //   'timeUnit': _notifyTimeUnitValue
-    // });
-    //print(DateTime.par_expiryDateController.text);
     Navigator.of(context).pop();
   }
 

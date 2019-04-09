@@ -22,11 +22,6 @@ class LoginPage extends StatefulWidget {
   }
 }
 
-class _LoginData {
-  String email;
-  String password;
-}
-
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   LoginBloc _loginBloc;
@@ -37,6 +32,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
+    super.initState();
     _authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
     _loginBloc = LoginBloc(
         userRepository: _userRepository,

@@ -24,7 +24,6 @@ dependencies:
   equatable: ^0.2.3
   firebase_auth: ^0.8.3
   cloud_firestore: ^0.9.11
-  test : any
   image_picker: ^0.5.1
   firebase_storage: ^2.1.0+1
   flutter_secure_storage: ^3.2.1+1
@@ -55,11 +54,6 @@ flutter:
       fonts:
         - asset: fonts/Flama_Regular.otf
   # To add assets to your application, add an assets section, like this:
-  assets:
-  - images/watermelon.jpg
-  - images/milk.jpg
-  - images/bread.jpg
-  - images/spinach.jpg
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

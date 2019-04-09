@@ -1,4 +1,3 @@
-import 'package:freshit_flutter/src/models/User.dart';
 import 'package:meta/meta.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
