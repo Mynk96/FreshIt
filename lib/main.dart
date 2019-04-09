@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:freshit_flutter/Repositories/HomeRepository.dart';
+import 'package:freshit_flutter/Repositories/userRepository.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationBloc.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationEvent.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationState.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:freshit_flutter/src/blocs/home/HomeRepository.dart';
-import 'package:freshit_flutter/userRepository/userRepository.dart';
 import '_LoginPageState.dart';
 import 'ListsPage.dart';
 

@@ -4,11 +4,11 @@ import 'package:freshit_flutter/AddItemScreen.dart';
 import 'package:freshit_flutter/AppTheme.dart';
 import 'package:freshit_flutter/BottomNav.dart';
 import 'package:freshit_flutter/HomePage.dart';
+import 'package:freshit_flutter/Repositories/HomeRepository.dart';
 import 'package:freshit_flutter/bloc_provider.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationBloc.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationEvent.dart';
 import 'package:freshit_flutter/src/blocs/home/HomeBloc.dart';
-import 'package:freshit_flutter/src/blocs/home/HomeRepository.dart';
 
 class ListsPageState extends StatefulWidget {
   final HomeRepository homeRepository;

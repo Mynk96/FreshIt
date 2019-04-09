@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:freshit_flutter/Repositories/userRepository.dart';
 import 'package:freshit_flutter/src/blocs/Login/LoginEvent.dart';
 import 'package:freshit_flutter/src/blocs/Login/LoginState.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationBloc.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationEvent.dart';
-import 'package:freshit_flutter/userRepository/userRepository.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final UserRepository userRepository;

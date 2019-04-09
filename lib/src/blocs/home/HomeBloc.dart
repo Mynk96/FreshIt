@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freshit_flutter/HomePage.dart';
+import 'package:freshit_flutter/Repositories/HomeRepository.dart';
 import 'package:freshit_flutter/SettingsPage.dart';
 import 'package:freshit_flutter/bloc_provider.dart';
-import 'package:freshit_flutter/src/blocs/home/HomeRepository.dart';
 import 'package:rxdart/subjects.dart';
 
 class HomeBloc implements BlocBase {

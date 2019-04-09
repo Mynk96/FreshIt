@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freshit_flutter/AppTheme.dart';
+import 'package:freshit_flutter/Repositories/userRepository.dart';
 import 'package:freshit_flutter/src/blocs/Login/LoginBloc.dart';
 import 'package:freshit_flutter/src/blocs/Login/LoginEvent.dart';
 import 'package:freshit_flutter/src/blocs/Login/LoginState.dart';
 import 'package:freshit_flutter/src/blocs/authentication/AuthenticationBloc.dart';
-import 'package:freshit_flutter/userRepository/userRepository.dart';
 import 'title.dart';
 import '_SignInFooter.dart';
 import 'package:flutter/scheduler.dart';
