@@ -58,7 +58,7 @@ class HomeBloc implements BlocBase {
         onSelectNotification: onSelectNotification);
   }
 
-  void createNewItem(
+  Future<bool> createNewItem(
       {File image,
       String name,
       DateTime expiryDate,
@@ -66,9 +66,9 @@ class HomeBloc implements BlocBase {
       String unit,
       int quantity,
       String tags,
-      String notifyPeriod,
-      String timeUnit}) {
-    homeRepository.createNewItem(
+      int notifyPeriod,
+      String timeUnit}) async {
+    return await homeRepository.createNewItem(
         image: image,
         name: name,
         expiryDate: expiryDate,
@@ -101,7 +101,7 @@ class HomeBloc implements BlocBase {
   Future scheduleNotifications(DocumentSnapshot item, int index) async {
     var scheduledNotificationDateTime = calculateSchedulingDateTime(
         item.data["expiryDate"],
-        int.parse(item.data["notifyPeriod"]),
+        item.data["notifyPeriod"],
         item.data["timeUnit"]);
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
         'your other channel id',

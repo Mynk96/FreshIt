@@ -20,7 +20,7 @@ class HomeRepository extends Equatable {
         .snapshots();
   }
 
-  void createNewItem(
+  Future<bool> createNewItem(
       {File image,
       String name,
       DateTime expiryDate,
@@ -28,13 +28,13 @@ class HomeRepository extends Equatable {
       String unit,
       int quantity,
       String tags,
-      String notifyPeriod,
+      int notifyPeriod,
       String timeUnit}) async {
     final StorageReference storageReference = storage.ref().child(image.path);
     final StorageUploadTask uploadTask = storageReference.putFile(image);
     final StorageTaskSnapshot downloadUrl = await uploadTask.onComplete;
     String imageUrl = await downloadUrl.ref.getDownloadURL();
-    await db
+    DocumentReference d = await db
         .collection("Users")
         .document(user.email)
         .collection("StoredItems")
@@ -49,6 +49,8 @@ class HomeRepository extends Equatable {
       'notifyPeriod': notifyPeriod,
       'timeUnit': timeUnit
     });
+    if (d != null) return true;
+    return false;
   }
 
   void useItem(String id) async {
